@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import codecs
+import platform
+import subprocess
 from getpass import getpass
 
 import pyscrypt
@@ -8,6 +10,17 @@ try:
     input = raw_input
 except NameError:
     pass
+
+
+def write_to_clipboard(output):
+    system = platform.system()
+    if system == "Darwin":
+        cmd = ['pbcopy']
+    else:
+        cmd = ["xclip", "-selection", "clipboard"]
+        subprocess.Popen(cmd, stdin=subprocess.PIPE).communicate(output.encode('utf-8'))
+        cmd = ["xclip", "-selection", "primary"]
+    subprocess.Popen(cmd, stdin=subprocess.PIPE).communicate(output.encode('utf-8'))
 
 
 def generate(master_password, keyword, cost=2048, oLen=32):
@@ -20,10 +33,8 @@ def generate(master_password, keyword, cost=2048, oLen=32):
         dkLen=32
     )
     tmp = codecs.encode(hashed, 'hex').decode('utf-8')[0:oLen]
-    tmp = "!A" + tmp[:-2]
-    return tmp
+    tmp = "!" + tmp[:-1]
+    return tmp.title()
 
 if __name__ == "__main__":
-    master_password = getpass()
-    while True:
-        print(generate(master_password, input("Keyword: ")))
+    write_to_clipboard(generate(getpass(), input("Keyword: ")))
