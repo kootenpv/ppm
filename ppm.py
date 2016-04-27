@@ -33,8 +33,8 @@ def generate(master_password, keyword, cost=2048, oLen=32):
         dkLen=32
     )
     tmp = codecs.encode(hashed, 'hex').decode('utf-8')[0:oLen]
-    tmp = "!" + tmp[:-1]
-    return tmp.title()
+    tmp = "!A" + tmp[:-2]
+    return tmp
 
 if __name__ == "__main__":
     write_to_clipboard(generate(getpass(), input("Keyword: ")))
