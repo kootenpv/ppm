@@ -24,7 +24,7 @@ def write_to_clipboard(output):
     subprocess.Popen(cmd, stdin=subprocess.PIPE).communicate(output.encode('utf-8'))
 
 
-def generate(master_password, keyword, cost=2 ** 20, oLen=32):
+def generate(master_password, keyword, cost=2 ** 15, oLen=32):
     hashed = pylibscrypt.scrypt(password=bytes(master_password, "utf8"),
                                 salt=bytes(keyword, "utf8"),
                                 N=cost,
